@@ -1,0 +1,49 @@
+trigger:
+  - main
+
+variables:
+  - group: terraform-lab-vars
+
+stages:
+  - stage: Validate
+    jobs:
+      - job: TerraformPlan
+        pool:
+          vmImage: 'ubuntu-latest'
+        steps:
+          - task: TerraformInstaller@1
+            inputs:
+              terraformVersion: 'latest'
+
+          - task: TerraformTaskV4@4
+            displayName: 'Terraform Init'
+            inputs:
+              command: 'init'
+              backendServiceArm: 'sc-azure-lab'
+              backendAzureRmResourceGroupName: 'rg-tfstate-lab'
+              backendAzureRmStorageAccountName: 'tfstatelab001'
+              backendAzureRmContainerName: 'tfstate'
+              backendAzureRmKey: 'lab.terraform.tfstate'
+
+          - task: TerraformTaskV4@4
+            displayName: 'Terraform Plan'
+            inputs:
+              command: 'plan'
+              environmentServiceNameAzureRM: 'sc-azure-lab'
+
+  - stage: Apply
+    dependsOn: Validate
+    jobs:
+      - deployment: TerraformApply
+        environment: 'production'
+        pool:
+          vmImage: 'ubuntu-latest'
+        strategy:
+          runOnce:
+            deploy:
+              steps:
+                - task: TerraformTaskV4@4
+                  displayName: 'Terraform Apply'
+                  inputs:
+                    command: 'apply'
+                    environmentServiceNameAzureRM: 'sc-azure-lab'
