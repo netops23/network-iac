@@ -18,6 +18,7 @@ module "vnet_eastus" {
     "snet-data" = "10.10.2.0/24"
     "snet-web"  = "10.10.3.0/24"
     "snet-db"   = "10.10.4.0/24"
+    "snet-sandbox" = "10.10.5.0/24"
   }
 
   tags = var.common_tags
