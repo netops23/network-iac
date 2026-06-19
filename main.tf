@@ -17,6 +17,7 @@ module "vnet_eastus" {
     "snet-app"  = "10.10.1.0/24"
     "snet-data" = "10.10.2.0/24"
     "snet-web"  = "10.10.3.0/24"
+    "snet-db"   = "10.10.4.0/24"
   }
 
   tags = var.common_tags
@@ -35,6 +36,7 @@ module "vnet_westus" {
     "snet-app"  = "10.20.1.0/24"
     "snet-data" = "10.20.2.0/24"
     "snet-web"  = "10.20.3.0/24"
+    "snet-db"   = "10.10.4.0/24"
   }
 
   tags = var.common_tags
